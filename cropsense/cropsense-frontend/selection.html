@@ -1,0 +1,159 @@
+<html>
+  <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let selectedCrops = [];
+        const maxCrops = 8;
+
+        const updateSelectedCrops = () => {
+          const selectedContainer = document.getElementById("selected-crops");
+          selectedContainer.innerHTML = ""; // Clear previous crops
+
+          selectedCrops.forEach((crop) => {
+            const cropDiv = document.createElement("div");
+            cropDiv.classList.add("bg-white", "rounded-full", "p-4", "m-2");
+
+            const img = document.createElement("img");
+            img.src = crop.src;
+            img.alt = `Illustration of ${crop.name}`;
+            img.classList.add("w-16", "h-16");
+
+            cropDiv.appendChild(img);
+            selectedContainer.appendChild(cropDiv);
+          });
+
+          document.getElementById("crop-count").textContent = `${selectedCrops.length}/${maxCrops}`;
+        };
+
+        document.querySelectorAll(".crop-item").forEach((item) => {
+          item.addEventListener("click", () => {
+            const cropName = item.getAttribute("data-crop");
+            const cropSrc = item.querySelector("img").src;
+
+            // Check if crop is already selected
+            const cropIndex = selectedCrops.findIndex(crop => crop.name === cropName);
+
+            if (cropIndex === -1) {
+              if (selectedCrops.length < maxCrops) {
+                selectedCrops.push({ name: cropName, src: cropSrc });
+              }
+            } else {
+              selectedCrops.splice(cropIndex, 1); // Deselect if already selected
+            }
+            updateSelectedCrops();
+          });
+        });
+      });
+    </script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-md mx-auto p-4">
+      <h1 class="text-xl font-bold mb-2">Select crops</h1>
+      <p class="text-gray-700 mb-1">
+        Select up to 8 crops you are interested in
+        <span class="text-gray-900" id="crop-count">0/8</span>
+      </p>
+      <p class="text-gray-500 mb-4">You can always change it later.</p>
+
+      <!-- Selected Crops Container -->
+      <div id="selected-crops" class="flex flex-wrap justify-start mb-4"></div>
+
+      <!-- Crop Selection Grid -->
+      <div class="grid grid-cols-3 gap-4">
+        <!-- Clickable Crop Items -->
+        <div class="flex flex-col items-center crop-item" data-crop="Almond">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Almond" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/ZJtkR8EGxTKIM9ZODsFUKr8se8sIr2OKMlQS1wYGWVrKTq2JA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Almond</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Apple">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Apple" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/uKKmhcV24wasDx2kxy0YSIY9cJP5xVefVk6bJHan6lWLmUtTA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Apple</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Apricot">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Apricot" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/QMPltkPiqWoUE9T7jXyPNTLPckKeALHLLjWiE2DqA2dMTq2JA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Apricot</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Banana">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Banana" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/srZfeABmK2qheIe1ONJeA1KMOneY646TIjF1cFOD2eYULTq2JA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Banana</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Barley">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Barley" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/gHCyHXelJNwHYazxnpURn1r27rVn61rIK1DaT4mDGLSJTq2JA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Barley</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Bean">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Bean" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/ihyV8rd2HkoiOJJxYnfnsoKUSq5y0AeNhGvvZCOogKBJmUtTA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Bean</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Bitter Gourd">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Bitter Gourd" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/cGGHuC9OIRbLHxf3SIqu3ZguaQeFtspLYiYaemb1gmBZMpanA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Bitter Gourd</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Black & Green Gram">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Black & Green Gram" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/wDf8Yyd0Rwy3aKDqYunFAXhfzKq12s9mQfi21n0ka6MdMpanA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Black & Green Gram</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Brinjal">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Brinjal" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/MqaafoZPfEnWKUrOqcjTCgkvRtCgeC780eEeTZR7925GykqdC.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Brinjal</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Cabbage">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Cabbage" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/ZUqohrfeisgfioOHOpnqjxaiNzoNPVq38f1hpI2Qp1enykqdC.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Cabbage</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Canola">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Canola" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/1GxEAc1txw4lAVzK09nZqRWyRiG51z4e6FlhKHkffOAiMpanA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Canola</p>
+        </div>
+
+        <div class="flex flex-col items-center crop-item" data-crop="Capsicum">
+          <div class="bg-white rounded-full p-4">
+            <img alt="Illustration of Capsicum" class="w-16 h-16" src="https://storage.googleapis.com/a1aa/image/awGrMjDdfStbwtlMgXxBtP0JwKE0J7jWmOMBD4xtopdBMpanA.jpg"/>
+          </div>
+          <p class="mt-2 text-gray-700">Capsicum</p>
+        </div>
+
+        <!-- Add more crops as needed -->
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <a href="main.html" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Next
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

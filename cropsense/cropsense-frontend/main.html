@@ -1,0 +1,219 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CropSense</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <script>
+        async function fetchWeather() {
+            const apiKey = '8ea0e63b9fabf18cdc828fb55cb49fe8';
+            const city = 'Hyderabad';
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            const temperature = data.main.temp;
+            const weatherDescription = data.weather[0].description;
+            const minTemp = data.main.temp_min;
+            const maxTemp = data.main.temp_max;
+
+            const date = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const currentDate = date.toLocaleDateString(undefined, options);
+
+            document.getElementById('city-name').innerText = `${city}, ${currentDate}`;
+            document.getElementById('temperature').innerText = `${temperature}°C`;
+            document.getElementById('weather-description').innerText = weatherDescription.charAt(0).toUpperCase() + weatherDescription.slice(1);
+            document.getElementById('min-max-temp').innerText = `${minTemp}°C / ${maxTemp}°C`;
+
+            // Determine spraying condition based on weather
+            const sprayingCondition = determineSprayingCondition(weatherDescription);
+            document.getElementById('spraying-condition').innerText = sprayingCondition;
+            document.getElementById('spraying-condition').className = sprayingCondition === 'Optimal' ? 'text-green-500' : 'text-red-500';
+        }
+
+        function determineSprayingCondition(weatherDescription) {
+            const optimalConditions = ['clear sky', 'few clouds', 'scattered clouds'];
+            return optimalConditions.includes(weatherDescription) ? 'Optimal' : 'Not Optimal';
+        }
+
+        window.onload = fetchWeather;
+
+        function toggleMenu() {
+            const menu = document.getElementById('dropdown-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function toggleCamera() {
+            const cameraContainer = document.getElementById('camera-container');
+            if (cameraContainer.classList.contains('hidden')) {
+                const constraints = {
+                    video: true
+                };
+
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then((stream) => {
+                        const video = document.getElementById('camera');
+                        video.srcObject = stream;
+                        video.play();
+                        cameraContainer.classList.remove('hidden');
+                    })
+                    .catch((err) => {
+                        console.error('Error accessing the camera: ', err);
+                    });
+            } else {
+                const video = document.getElementById('camera');
+                const stream = video.srcObject;
+                const tracks = stream.getTracks();
+
+                tracks.forEach((track) => {
+                    track.stop();
+                });
+
+                video.srcObject = null;
+                cameraContainer.classList.add('hidden');
+            }
+        }
+
+        function showInfo() {
+            const infoContainer = document.getElementById('info-container');
+            infoContainer.classList.toggle('hidden');
+        }
+
+        function captureImage() {
+            const video = document.getElementById('camera');
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageDataUrl = canvas.toDataURL('image/png');
+            localStorage.setItem('capturedImage', imageDataUrl);
+            window.location.href = 'preview.html';
+        }
+    </script>
+</head>
+<body class="bg-gray-100">
+    <div class="bg-white shadow-md p-4 relative">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold">CropSense</h1>
+            <div class="relative">
+                <i class="fas fa-ellipsis-h text-gray-500 cursor-pointer" onclick="toggleMenu()"></i>
+                <div id="dropdown-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg hidden">
+                    <ul>
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Give Feedback</li>
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Contacts</li>
+                        <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Tutorial</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="p-4">
+        <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 id="city-name" class="text-lg font-bold">Hyderabad, </h2>
+                    <p id="weather-description" class="text-gray-500">Foggy</p>
+                    <p id="min-max-temp" class="text-gray-500">23°C / 30°C</p>
+                </div>
+                <div id="temperature" class="text-2xl font-bold">26°C</div>
+                <div class="text-gray-500">
+                    <i class="fas fa-cloud"></i>
+                </div>
+            </div>
+        </div>
+        <div class="mb-4">
+            <h2 class="text-lg font-bold mb-2">Heal your crop</h2>
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <div class="flex justify-around items-center mb-4">
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-camera text-2xl text-green-500"></i>
+                        <p class="text-sm">Take a picture</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-500"></i>
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-file-alt text-2xl text-green-500"></i>
+                        <p class="text-sm">See diagnosis</p>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-500"></i>
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-prescription-bottle-alt text-2xl text-green-500"></i>
+                        <p class="text-sm">Get medicine</p>
+                    </div>
+                </div>
+                <button class="bg-blue-500 text-white py-2 px-4 rounded-full w-full" onclick="toggleCamera()">Take a picture</button>
+                <div id="camera-container" class="hidden mt-4">
+                    <video id="camera" class="w-full rounded-lg shadow-md" autoplay></video>
+                    <button class="bg-green-500 text-white py-2 px-4 rounded-full w-full mt-2" onclick="captureImage()">Capture</button>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg shadow-md p-4 flex items-center justify-between cursor-pointer" onclick="document.getElementById('captured-image-container').classList.toggle('hidden')">
+                <div class="flex items-center">
+                    <i class="fas fa-eye text-2xl text-blue-500"></i>
+                    <p class="ml-2">Crop Monitoring</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-500"></i>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-4 flex items-center justify-between cursor-pointer" onclick="handlePestAndDisease()">
+                <div class="flex items-center">
+                    <i class="fas fa-bug text-2xl text-blue-500"></i>
+                    <p class="ml-2">Pests &amp; diseases</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-500"></i>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-seedling text-2xl text-blue-500"></i>
+                    <p class="ml-2">Cultivation Tips</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-500"></i>
+            </div>
+            <div class="bg-white rounded-lg shadow-md p-4 flex items-center justify-between">
+                <div class="flex items-center">
+                    <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
+                    <p class="ml-2">Pests and Disease Alert</p>
+                </div>
+                <i class="fas fa-chevron-right text-gray-500"></i>
+            </div>
+        </div>
+    </div>
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-md p-4 flex justify-around items-center">
+        <div class="flex flex-col items-center text-green-500">
+            <i class="fas fa-seedling text-2xl"></i>
+            <p class="text-xs">Your crops</p>
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-lightbulb text-2xl"></i>
+            <p class="text-xs">Recommendation</p>
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-info-circle text-2xl cursor-pointer" onclick="showInfo()"></i>
+            <p class="text-xs">Info</p>
+        </div>
+        <div class="flex flex-col items-center text-gray-500">
+            <i class="fas fa-user text-2xl"></i>
+            <p class="text-xs">You</p>
+        </div>
+    </div>
+    <div id="info-container" class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-lg w-full">
+            <h2 class="text-2xl font-bold mb-4">About CropSense</h2>
+            <p class="mb-4">CropSense is an innovative application designed to help farmers monitor and manage their crops effectively. With real-time weather updates, crop monitoring, pest and disease alerts, and personalized recommendations, CropSense aims to optimize crop health and yield.</p>
+            <p class="mb-4">Features:</p>
+            <ul class="list-disc list-inside mb-4">
+                <li>Real-time weather updates</li>
+                <li>Crop monitoring</li>
+                <li>Pest and disease alerts</li>
+                <li>Personalized recommendations</li>
+                <li>Fertilizer calculator</li>
+                <li>Cultivation tips</li>
+            </ul>
+            <button class="bg-blue-500 text-white py-2 px-4 rounded-full w-full" onclick="showInfo()">Close</button>
+        </div>
+    </div>
+</body>
+</html>

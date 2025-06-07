@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .toggle-link {
+            color: #007BFF;
+            cursor: pointer;
+        }
+        .social-buttons {
+            margin-top: 20px;
+            text-align: left; /* Align logos and text left */
+        }
+        .social-buttons .button {
+            display: flex;
+            align-items: center; /* Center logo and text */
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0; /* Space between buttons */
+            font-size: 14px; /* Font size adjustment */
+            cursor: pointer;
+            border: none; /* Remove default border */
+        }
+        .google {
+            background-color: #db4437; /* Google red */
+        }
+        .facebook {
+            background-color: #4267B2; /* Facebook blue */
+        }
+        .twitter {
+            background-color: #1DA1F2; /* Twitter blue */
+        }
+        .social-buttons img {
+            width: 20px; /* Set width for logos */
+            height: 20px; /* Set height for logos */
+            margin-right: 10px; /* Space between logo and text */
+        }
+        .social-buttons button:hover {
+            opacity: 0.8; /* Hover effect */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="auth-container">
+    <!-- Login Form -->
+    <div id="login-form">
+        <h2>Login</h2>
+        <form method="POST" action="userinfo.html">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <button type="submit" style="background-color: #4CAF50;">Login</button>
+        </form>
+        <p>Don't have an account? <span class="toggle-link" onclick="showSignUp()">Sign Up</span></p>
+        
+        <!-- Social Login Options -->
+        <div class="social-buttons">
+            <button class="google button">
+                <img src="google-logo.png" alt="Google Logo"> Continue with Google
+            </button>
+            <button class="facebook button">
+                <img src="facebook-logo.webp" alt="Facebook Logo"> Continue with Facebook
+            </button>
+            <button class="twitter button">
+                <img src="twitter-logo.png" alt="Twitter Logo"> Continue with Twitter
+            </button>
+        </div>
+    </div>
+
+    <!-- Sign Up Form -->
+    <div id="signup-form" style="display:none;">
+        <h2>Sign Up</h2>
+        <form method="POST" action="login.html">
+    <input type="text" name="username" placeholder="Username" required><br>
+    <input type="password" name="password" placeholder="Password" required><br>
+    <button type="submit" style="background-color: #4CAF50;">Signup</button>
+</form>
+
+    </div>
+</div>
+
+<script>
+    function showSignUp() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'block';
+    }
+
+    function showLogin() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('signup-form').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
